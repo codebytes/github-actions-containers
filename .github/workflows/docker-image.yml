@@ -11,15 +11,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      tag-name: my-image-name:$(date +%s)
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag ${{ env.tag-name }}
     - name: Container image scan
       uses: Azure/container-scan@v0.1
       with:
         # Docker image to scan
-        image-name: my-image-name:$(date +%s)
+        image-name: ${{ env.tag-name }}
         # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
         token: ${{ github.token }}
