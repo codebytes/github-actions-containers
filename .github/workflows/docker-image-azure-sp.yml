@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      tag-name: my-image-name
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set current date as ENV var
+      id: date
+      run: echo "::set-output name=date::$(date +%s)" 
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ${{ env.tag-name }}:${{ steps.date.outputs.date }}
+    - name: Container image scan
+      uses: Azure/container-scan@v0.1
+      with:
+        # Docker image to scan
+        image-name: ${{ env.tag-name }}:${{ steps.date.outputs.date }}
+        # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
+        token: ${{ github.token }}
+
+  deploy-image:
+    runs-on: ubuntu-latest
+    env:
+      tag-name: my-image-name
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
