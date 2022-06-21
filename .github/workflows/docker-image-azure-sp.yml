@@ -31,8 +31,16 @@ jobs:
   deploy-image:
     runs-on: ubuntu-latest
     env:
-      tag-name: my-image-name
+      image-name: cayers-sample-app
     steps:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_URL }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - run: |
+          docker build . -t ${{ secrets.ACR_URL }}/${{image-name}}:${{ github.sha }}
+          docker push ${{ secrets.ACR_URL }}/${{image-name}}:${{ github.sha }}
