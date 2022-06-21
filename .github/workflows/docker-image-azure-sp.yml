@@ -12,19 +12,19 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      tag-name: my-image-name
+      image-name: cayers-sample-app
     steps:
     - uses: actions/checkout@v3
     - name: Set current date as ENV var
       id: date
       run: echo "::set-output name=date::$(date +%s)" 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ env.tag-name }}:${{ steps.date.outputs.date }}
+      run: docker build . --file Dockerfile --tag ${{ env.image-name }}:${{ steps.date.outputs.date }}
     - name: Container image scan
       uses: Azure/container-scan@v0.1
       with:
         # Docker image to scan
-        image-name: ${{ env.tag-name }}:${{ steps.date.outputs.date }}
+        image-name: ${{ env.image-name }}:${{ steps.date.outputs.date }}
         # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
         token: ${{ github.token }}
 
@@ -42,5 +42,5 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-          docker build . -t ${{ secrets.ACR_URL }}/${{image-name}}:${{ github.sha }}
-          docker push ${{ secrets.ACR_URL }}/${{image-name}}:${{ github.sha }}
+          docker build . -t ${{ secrets.ACR_URL }}/${{ env.image-name }}:${{ github.sha }}
+          docker push ${{ secrets.ACR_URL }}/${{ env.image-name }}:${{ github.sha }}
