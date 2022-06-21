@@ -27,3 +27,12 @@ jobs:
         image-name: ${{ env.tag-name }}:${{ steps.date.outputs.date }}
         # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
         token: ${{ github.token }}
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: '${{ env.tag-name }}:${{ steps.date.outputs.date }}'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
