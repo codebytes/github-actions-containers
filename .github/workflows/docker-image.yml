@@ -20,13 +20,13 @@ jobs:
       run: echo "::set-output name=date::$(date +%s)" 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.tag-name }}:${{ steps.date.outputs.date }}
-    - name: Container image scan
-      uses: Azure/container-scan@v0.1
-      with:
-        # Docker image to scan
-        image-name: ${{ env.tag-name }}:${{ steps.date.outputs.date }}
-        # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
-        token: ${{ github.token }}
+    # - name: Container image scan
+    #   uses: Azure/container-scan@v0.1
+    #   with:
+    #     # Docker image to scan
+    #     image-name: ${{ env.tag-name }}:${{ steps.date.outputs.date }}
+    #     # Minimum severities of vulnerabilities to be displayed (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)
+    #     token: ${{ github.token }}
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
