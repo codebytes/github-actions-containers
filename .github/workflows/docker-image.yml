@@ -15,7 +15,7 @@ jobs:
     env:
       tag-name: my-image-name
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set current date as ENV var
       id: date
       run: echo "::set-output name=date::$(date +%s)" 
