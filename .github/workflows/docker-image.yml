@@ -22,7 +22,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.tag-name }}:${{ steps.date.outputs.date }}
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@v0.35.0
+      uses: aquasecurity/trivy-action@v0.36.0
       with:
         image-ref: '${{ env.tag-name }}:${{ steps.date.outputs.date }}'
         format: 'table'
